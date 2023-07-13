@@ -1,0 +1,69 @@
+import React, { useState } from 'react';
+
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      const response = await fetch(`http://localhost:3001/users?email=${encodeURIComponent(email)}&senha=${encodeURIComponent(senha)}`);
+
+      if (response.ok) {
+        const result = await response.json();
+
+        if (result.length === 0) {
+          // API returned no results
+          alert('Invalid nome or password');
+        } else {
+          // API returned a result
+          const userData = result
+
+          // Save user data in session storage
+          sessionStorage.setItem('user', JSON.stringify(userData));
+          //teste
+          console.log(sessionStorage.getItem('user'))
+          // Redirect to the desired page or show success message
+          alert('Login successful!');
+        }
+      } else {
+        // Handle error response
+        alert('Error logging in');
+      }
+    } catch (error) {
+      // Handle network or other errors
+      alert(error)
+      // alert('An error occurred. Please try again later.');
+    }
+  };
+  return (
+    <div>
+      <h2>Login11</h2>
+      {error && <div>{error}</div>}
+      <form onSubmit={handleLogin}>
+        <div>
+          <label>email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Senha:</label>
+          <input
+            type="senha"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+          />
+        </div>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  );
+};
+
+export default Login;

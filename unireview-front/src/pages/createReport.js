@@ -55,7 +55,7 @@ const Report = () => {
   return (
     <form onSubmit={handleSubmit}>
       <label>
-         Review id:
+         Id da avaliação:
         <input
           type="text"
           name="review_id"

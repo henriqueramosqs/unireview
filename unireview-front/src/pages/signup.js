@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-
+import '../style/signup.css'
 const SignUp = () => {
   const [nome, setNome] = useState('');
+  const [curso, setCurso] = useState('');
+  const [matricula, setMatricula] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [foto, setFoto] = useState(null);
   const [confirmSenha, setConfirmSenha] = useState('');
   const [error, setError] = useState('');
 
@@ -19,7 +22,7 @@ const SignUp = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ nome,email,senha }),
+          body: JSON.stringify({ nome,email,senha,matricula,curso,foto }),
         });
 
         if (response.ok) {
@@ -40,7 +43,7 @@ const SignUp = () => {
 
   return (
     <div>
-      <h2>Sign Up5</h2>
+      <h2>Sign Up</h2>
       {error && <div>{error}</div>}
       <form onSubmit={handleSignUp}>
 
@@ -61,6 +64,32 @@ const SignUp = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
+        <div>
+          <label>Curso:</label>
+          <input
+            type="text"
+            value={curso}
+            onChange={(e) => setCurso(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Matricula:</label>
+          <input
+            type="text"
+            value={matricula}
+            onChange={(e) => setMatricula(e.target.value)}
+          />
+        </div>
+        <div>
+
+          <label>Foto:</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setFoto(e.target.files[0])} // Atualiza o estado com a foto selecionada
+          />
+        </div>
+
 
         <div>
           <label>Senha:</label>

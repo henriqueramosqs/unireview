@@ -79,7 +79,7 @@ function User() {
         <div>
           <h2>id: {data.id}</h2>
           <h3>Nome: {data.email}</h3>
-          <h3>Curso: {data.matricula}</h3>
+          <h3>Matricula: {data.matricula}</h3>
           <h3>Curso: {data.curso}</h3>
           {data.foto && <img src={getPhotoUrl()} alt="User Photo" />}
           {/* <button onClick={apagar}>Apagar</button> */}

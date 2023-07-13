@@ -39,7 +39,7 @@ const AddReview = () => {
 
       if (response.ok) {
         // Sign up successful
-        alert('Sign up successful!');
+        alert('Avaliação criada!');
       } else {
         // Handle error response
         const data = await response.json();
@@ -68,7 +68,7 @@ const AddReview = () => {
       <br />
 
       <label>
-        Professor Score (0-10):
+        Nota do professor  (0-10):
         <input
           type="number"
           name="prof_score"
@@ -82,7 +82,7 @@ const AddReview = () => {
       <br />
 
       <label>
-        Professor Text:
+        Comentário sobre o professor:
         <input
           type="text"
           name="prof_txt"
@@ -93,7 +93,7 @@ const AddReview = () => {
       <br />
 
       <label>
-        Class Score (0-10):
+        Nota da disciplina(0-10):
         <input
           type="number"
           name="course_score"
@@ -107,7 +107,7 @@ const AddReview = () => {
       <br />
 
       <label>
-        Class Text:
+        Comentário sobre a disciplina:
         <input
           type="text"
           name="course_txt"

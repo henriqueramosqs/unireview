@@ -9,8 +9,8 @@ const port = 3001;
 const connection = mysql.createConnection({
     host:"localhost",
     user:"root",
-    password:"<senha>",
-    database:"<database>"
+    password:"<>",
+    database:"<>>"
 });
 
 // Connect to the MySQL server
@@ -26,8 +26,8 @@ app.use(cors())
 
 // Create a user
 app.post('/users', (req, res) => {
-  const { nome, email ,senha} = req.body;
-  const user = { nome, email ,senha};
+  const { nome,email,senha,matricula,curso,foto} = req.body;
+  const user = { nome,email,senha,matricula,curso,foto};
 
   connection.query('INSERT INTO User SET ?', user, (err, result) => {
     if (err) throw err;
@@ -157,7 +157,7 @@ app.get('/deptos/:id', (req, res) => {
 app.get('/reviews', (req, res) => {
   const { professor_id, depto_id, course_id, class_id } = req.query;
 
-  let query = 'SELECT * FROM Review WHERE 1';
+  let query = 'SELECT * FROM Review WHERE is_blocked = false';
 
   if (professor_id) {
     query += ` AND class_id IN (SELECT id FROM Class WHERE professor_id = ${professor_id})`;

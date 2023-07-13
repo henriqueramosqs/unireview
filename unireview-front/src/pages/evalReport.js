@@ -74,7 +74,7 @@ const EvalReport = () => {
   return (
     <form onSubmit={handleSubmit}>
       <label>
-        Report ID:
+        Id da denúncia:
         <input
           type="number"
           name="id"

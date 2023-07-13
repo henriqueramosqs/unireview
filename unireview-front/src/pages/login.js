@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../style/login.css'
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,17 +17,13 @@ const Login = () => {
         const result = await response.json();
 
         if (result.length === 0) {
-          // API returned no results
           alert('Invalid nome or password');
         } else {
-          // API returned a result
           const userData = result
-
-          // Save user data in session storage
           sessionStorage.setItem('user', JSON.stringify(userData));
+
           //teste
           console.log(sessionStorage.getItem('user'))
-          // Redirect to the desired page or show success message
           alert('Login successful!');
         }
       } else {
@@ -36,12 +33,11 @@ const Login = () => {
     } catch (error) {
       // Handle network or other errors
       alert(error)
-      // alert('An error occurred. Please try again later.');
     }
   };
   return (
     <div>
-      <h2>Login11</h2>
+      <h2>Login</h2>
       {error && <div>{error}</div>}
       <form onSubmit={handleLogin}>
         <div>

@@ -8,7 +8,18 @@ const Search = () => {
       const response = await fetch(apiEndpoint);
       if (response.ok) {
         const data = await response.json();
-        setResult(JSON.stringify(data, null, 2));
+
+        if (apiEndpoint === 'http://localhost:3001/users') {
+          // Ignore the 'foto' field for the 'Usuários' endpoint
+          const modifiedData = data.map((user) => {
+            const { foto, ...rest } = user;
+            return rest;
+          });
+
+          setResult(JSON.stringify(modifiedData, null, 2));
+        } else {
+          setResult(JSON.stringify(data, null, 2));
+        }
       } else {
         setResult('Error occurred during API call');
       }
@@ -22,10 +33,10 @@ const Search = () => {
       <h2>Buscas</h2>
       <div>
         <label>Usuários</label>
-        <button onClick={() => handleButtonClick('http://localhost:3001/users')}>Buscar </button>
+        <button onClick={() => handleButtonClick('http://localhost:3001/users')}>Buscar</button>
       </div>
       <div>
-        <label>professores:</label>
+        <label>Professores:</label>
         <button onClick={() => handleButtonClick('http://localhost:3001/profs')}>Buscar</button>
       </div>
       <div>
@@ -50,7 +61,7 @@ const Search = () => {
       </div>
       {result && (
         <div>
-          <h3>API Result:</h3>
+          <h3>Resultado:</h3>
           <pre style={{ whiteSpace: 'pre-wrap' }}>{result}</pre>
         </div>
       )}

@@ -36,7 +36,7 @@ Vá para a pasta ./database_insertion, use o pip para instalar o numpy, o pandas
 
 Em sequita mude os parametros da conexao no arquivo data_insertion.ipynb e execute este notebook célula à celula
 
-### 3. Back end
+### 4. Back end
 
 Vá para a pasta ./unireview-back, use o npm para instalar o express, o cors e mysql:
 
@@ -50,7 +50,7 @@ Mais uma vez, mude os parametros da conexao no arquivo main.js e execute o arqui
  ```
   node main.js
  ```
-### 3. Front end
+### 5. Front end
 
 Vá para a pasta ./unireview-front, use o npm install para instalar pacotes necessários
 

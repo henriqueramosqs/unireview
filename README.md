@@ -56,6 +56,7 @@ Vá para a pasta ./unireview-front, use o npm install para instalar pacotes nece
 
  ```
   npm install
+  npm start
  ```
 
  A aplicação estará disponível em localhost:3000 e poderá ser acessada em qualquer navegador

@@ -9,8 +9,8 @@ const port = 3001;
 const connection = mysql.createConnection({
     host:"localhost",
     user:"root",
-    password:"<>",
-    database:"<>>"
+    password:"<senha>",
+    database:"<database>"
 });
 
 // Connect to the MySQL server
@@ -394,7 +394,7 @@ app.post('/admins', (req, res) => {
 app.delete('/admins/:id', (req, res) => {
   const administratorId = req.params.id;
 
-  connection.query('DELETE FROM Adms WHERE id = ?', administratorId, (err, result) => {
+  connection.query('DELETE FROM Adms WHERE id_usuario = ?', administratorId, (err, result) => {
     if (err) {
       console.error('Error deleting administrator:', err);
       res.status(500).json({ message: 'Error deleting administrator' });

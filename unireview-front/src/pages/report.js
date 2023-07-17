@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 
-function User() {
+function Report() {
   const { id } = useParams();
   const [data, setData] = useState(null);
-  const [email,setEmail] = useState("");
+  const [reason, setReason] = useState(null);
 
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/users/${id}`); // Replace with your API endpoint
-        if (response.ok) {
+        const response = await fetch(`http://localhost:3001/reports/${id}`); // Replace with your API endpoint
+        if (response.ok) { 
           const data = await response.json();
           setData(data);
-          console.log(data);
+          console.log("data: ",data);
         } else {
           throw new Error('Error: ' + response.status);
         }
@@ -27,26 +27,12 @@ function User() {
   }, [id]);
 
 
-  const getPhotoUrl = () => {
-    if (data && data.foto) {
-      const base64String = btoa(
-        new Uint8Array(data.foto.data).reduce(
-          (data, byte) => data + String.fromCharCode(byte),
-          ''
-        )
-      );
-      return `data:${data.foto.type};base64,${base64String}`;
-    }
-    return null;
-  };
-
-
   const handleClick = async (e) => {
     e.preventDefault();
 
     const storedUser = JSON.parse(sessionStorage.getItem('user'));
     if (!storedUser) {
-      alert('Você precisa estar logado para fazer apagar um usuário!');
+      alert('Você precisa estar logado para fazer apagar uma denuncia!');
       return;
     }
 
@@ -74,7 +60,7 @@ function User() {
 
 
       try {
-        const response = await fetch(`http://localhost:3001/users/${id}`, {
+        const response = await fetch(`http://localhost:3001/reports/${id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -82,7 +68,7 @@ function User() {
         });
 
         if (response.ok) {
-          alert('Usuário apagado!');
+          alert('Denuncia apagado!');
         } else {
           const data = await response.json();
           console.log(data.error);
@@ -93,7 +79,8 @@ function User() {
     };
 
 
-     const handleEmailChange = async (e) => {
+
+    const handleReasonChange = async (e) => {
         e.preventDefault();
     
         const storedUser = JSON.parse(sessionStorage.getItem('user'));
@@ -102,26 +89,23 @@ function User() {
           return;
         }
 
-        console.log(sessionStorage.getItem('user'))
-        console.log("olha aí "+ JSON.parse(sessionStorage.getItem('user')).id)
-
-        if(JSON.parse(sessionStorage.getItem('user')).id!=id){
-          alert('Você não pode alterar o email de outro usuario');
+        if(JSON.parse(sessionStorage.getItem('user')).id!=data[0].user_id){
+          alert('Você não pode alterar o comentario de outro usuario');
           return
         }
        
 
         try {
-          const response = await fetch(`http://localhost:3001/users/${id}`, {
+          const response = await fetch(`http://localhost:3001/reports/${id}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
             },
-            body:  JSON.stringify({ email }),
+            body:  JSON.stringify({ reason }),
           });
   
           if (response.ok) {
-            alert('Email mudado!');
+            alert('Comentário mudado!');
           } else {
             const data = await response.json();
             console.log(data.error);
@@ -140,21 +124,21 @@ function User() {
     <div>
       {data ? (
         <div>
-          <h2>id: {data.id}</h2>
-          <h3>Nome: {data.nome}</h3>
-          <h3>Email: {data.email}</h3>
-          <h3>Matricula: {data.matricula}</h3>
-          <h3>Curso: {data.curso}</h3>
-          {data.foto && <img src={getPhotoUrl()} alt="User Photo" />}
-          <form onSubmit={handleEmailChange}>
-            <label htmlFor="newEmail">Novo Email:</label>
+          <h2>id: {data[0].id}</h2>
+          <h3>id do avaliador: {data[0].user_id}</h3>
+          <h3>id da avaliação: {data[0].review_id}</h3>
+          <h3>id do avaliador da denúncia: {data[0].reviewer_id}</h3>
+          <h3>Motivo: {data[0].reason}</h3>
+          <h3>Aceito: {data[0].accepted}</h3>
+          <form onSubmit={handleReasonChange}>
+            <label htmlFor="novoComentario">Novo comentário:</label>
             <input
-              type="email"
-              id="newEmail"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              id="novoComentario"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
             />
-            <button type="submit">Alterar Email</button>
+            <button type="submit">Alterar comtário</button>
           </form>
 
           <button onClick={handleClick}> Apagar</button>
@@ -162,8 +146,14 @@ function User() {
       ) : (
         <p>Loading...</p>
       )}
+
+      <div>
+    
+      </div>
     </div>
+
+
   );
 }
 
-export default User;
+export default Report;

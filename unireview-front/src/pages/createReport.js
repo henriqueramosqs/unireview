@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Report = () => {
+const AddReport = () => {
   const [formData, setFormData] = useState({
     user_id: " ",
     review_id: " ",
@@ -81,4 +81,4 @@ const Report = () => {
   );
 };
 
-export default Report;
+export default AddReport;

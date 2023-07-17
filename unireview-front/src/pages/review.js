@@ -1,20 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 
-function User() {
+function Review() {
   const { id } = useParams();
   const [data, setData] = useState(null);
-  const [email,setEmail] = useState("");
+  const [prof_txt, setProfTxt] = useState(null);
+  const [course_txt, setClassTxt] = useState(null);
 
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/users/${id}`); // Replace with your API endpoint
-        if (response.ok) {
+        const response = await fetch(`http://localhost:3001/reviews/${id}`); // Replace with your API endpoint
+        if (response.ok) { 
           const data = await response.json();
           setData(data);
-          console.log(data);
+          console.log("data: ",data);
         } else {
           throw new Error('Error: ' + response.status);
         }
@@ -27,26 +28,12 @@ function User() {
   }, [id]);
 
 
-  const getPhotoUrl = () => {
-    if (data && data.foto) {
-      const base64String = btoa(
-        new Uint8Array(data.foto.data).reduce(
-          (data, byte) => data + String.fromCharCode(byte),
-          ''
-        )
-      );
-      return `data:${data.foto.type};base64,${base64String}`;
-    }
-    return null;
-  };
-
-
   const handleClick = async (e) => {
     e.preventDefault();
 
     const storedUser = JSON.parse(sessionStorage.getItem('user'));
     if (!storedUser) {
-      alert('Você precisa estar logado para fazer apagar um usuário!');
+      alert('Você precisa estar logado para fazer apagar uma review!');
       return;
     }
 
@@ -74,7 +61,7 @@ function User() {
 
 
       try {
-        const response = await fetch(`http://localhost:3001/users/${id}`, {
+        const response = await fetch(`http://localhost:3001/reviews/${id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -82,7 +69,7 @@ function User() {
         });
 
         if (response.ok) {
-          alert('Usuário apagado!');
+          alert('Denuncia apagado!');
         } else {
           const data = await response.json();
           console.log(data.error);
@@ -93,35 +80,33 @@ function User() {
     };
 
 
-     const handleEmailChange = async (e) => {
+
+    const handleChange = async (e) => {
         e.preventDefault();
     
         const storedUser = JSON.parse(sessionStorage.getItem('user'));
         if (!storedUser) {
-          alert('Você precisa estar logado para mudar email!');
+          alert('Você precisa estar logado para mudar uma avaliação');
           return;
         }
 
-        console.log(sessionStorage.getItem('user'))
-        console.log("olha aí "+ JSON.parse(sessionStorage.getItem('user')).id)
-
-        if(JSON.parse(sessionStorage.getItem('user')).id!=id){
-          alert('Você não pode alterar o email de outro usuario');
+        if(JSON.parse(sessionStorage.getItem('user')).id!=data[0].user_id){
+          alert('Você não pode alterar o comentario de outro usuario');
           return
         }
        
 
         try {
-          const response = await fetch(`http://localhost:3001/users/${id}`, {
+          const response = await fetch(`http://localhost:3001/reviews/${id}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
             },
-            body:  JSON.stringify({ email }),
+            body:  JSON.stringify({ prof_txt,course_txt }),
           });
   
           if (response.ok) {
-            alert('Email mudado!');
+            alert('Comentário mudado!');
           } else {
             const data = await response.json();
             console.log(data.error);
@@ -134,27 +119,35 @@ function User() {
 
 
 
-
-
   return (
     <div>
       {data ? (
         <div>
-          <h2>id: {data.id}</h2>
-          <h3>Nome: {data.nome}</h3>
-          <h3>Email: {data.email}</h3>
-          <h3>Matricula: {data.matricula}</h3>
-          <h3>Curso: {data.curso}</h3>
-          {data.foto && <img src={getPhotoUrl()} alt="User Photo" />}
-          <form onSubmit={handleEmailChange}>
-            <label htmlFor="newEmail">Novo Email:</label>
+          <h3>id da avaliação: {data[0].review_id}</h3>
+          <p>id do avaliador: {data[0].user_id}</p>
+          <p>nota do professor: {data[0].prof_score}</p>
+          <p>descrição do professor: {data[0].prof_txt}</p>
+          <p>nota da disciplina: {data[0].course_score}</p>
+          <p>descrição da disciplina: {data[0].course_txt}</p>
+          <form onSubmit={handleChange}>
+            <label htmlFor="prof_txt">Nova descrição de professor:</label>
             <input
-              type="email"
-              id="newEmail"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              id="prof_txt"
+              value={prof_txt}
+              onChange={(e) => setProfTxt(e.target.value)}
             />
-            <button type="submit">Alterar Email</button>
+
+            <label htmlFor="course_txt">Nova descrição da disciplina:</label>
+
+            <input
+              type="text"
+              id="course_txt"
+              value={course_txt}
+              onChange={(e) => setClassTxt(e.target.value)}
+            />
+
+            <button type="submit">Alterar comentário</button>
           </form>
 
           <button onClick={handleClick}> Apagar</button>
@@ -162,8 +155,14 @@ function User() {
       ) : (
         <p>Loading...</p>
       )}
+
+      <div>
+    
+      </div>
     </div>
+
+
   );
 }
 
-export default User;
+export default Review;

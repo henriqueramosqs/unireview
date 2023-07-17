@@ -8,12 +8,14 @@ import Login from './pages/login';
 import Search from './pages/search';
 import AddReview from './pages/addReview';
 import User from './pages/users';
-import Report from './pages/createReport';
+import AddReport from './pages/createReport';
 import EvalReport from './pages/evalReport';
 import Department from './pages/department';
 import Professor from './pages/professor';
 import Course from './pages/course';
 import Turma from './pages/class';
+import Report from './pages/report';
+import Review from './pages/review';
 
 function App() {
   return (
@@ -24,13 +26,15 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/search' element={<Search />} />
         <Route path='/add' element={<AddReview />} />
-        <Route path='/report' element={<Report />} />
+        <Route path='/make_report' element={<AddReport />} />
         <Route path='/eval_report' element={<EvalReport />} />
         <Route path="/department/:id"element={<Department />}  />
         <Route path="/user/:id" element={<User />} />
         <Route path="/professor/:id" element={<Professor />} />
         <Route path="/class/:id" element={<Turma />} />
         <Route path="/course/:id" element={<Course />} /> 
+        <Route path="/review/:id" element={<Review />} /> 
+        <Route path="/report/:id" element={<Report />} /> 
       </Routes>
     </Router>
   );
@@ -52,7 +56,7 @@ const Layout = () => {
       <Link to="/add">Add Review</Link>
     </li>
     <li>
-      <Link to="/report">Add Report</Link>
+      <Link to="/make_report">Add Report</Link>
     </li>
     <li>
       <Link to="/eval_report">Eval Report</Link>

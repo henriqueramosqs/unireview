@@ -24,6 +24,13 @@ connection.connect((err) => {
 app.use(express.json());
 app.use(cors())
 
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
+
 // Create a user
 app.post('/users', (req, res) => {
   const { nome,email,senha,matricula,curso,foto} = req.body;
@@ -106,10 +113,11 @@ app.get('/users/:id/foto', (req, res) => {
 // Update a user
 app.put('/users/:id', (req, res) => {
   const userId = req.params.id;
-  const { name, email } = req.body;
-  const user = { name, email };
+  const {email } = req.body;
 
-  connection.query('UPDATE User SET ? WHERE id = ?', [user, userId], (err, result) => {
+  console.log("email:" + email)
+
+  connection.query('UPDATE User SET email=? WHERE id = ?', [email,userId], (err, result) => {
     if (err) throw err;
     console.log('User updated');
     res.sendStatus(200);
@@ -127,10 +135,6 @@ app.delete('/users/:id', (req, res) => {
   });
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
 
 
 // Get all deptos
@@ -153,6 +157,20 @@ app.get('/deptos/:id', (req, res) => {
     res.json(rows);
   });
 });
+
+
+
+// Get certain review
+app.get('/reviews/:id', (req, res) => {
+
+  const {id} = req.params
+
+  connection.query('SELECT * FROM Review WHERE review_id = ?', id, (err, rows) => {
+    if (err) throw err;
+    res.json(rows);
+  });
+});
+
 
 app.get('/reviews', (req, res) => {
   const { professor_id, depto_id, course_id, class_id } = req.query;
@@ -237,6 +255,18 @@ app.get('/reports', (req, res) => {
   });
 });
 
+
+
+app.get('/reports/:id', (req, res) => {
+  const { id } = req.params;
+
+  connection.query('SELECT * FROM Report WHERE id=?',id, (err, rows) => {
+    if (err) throw err;
+    res.json(rows);
+  });
+});
+
+
 // Create a report
 app.post('/reports', (req, res) => {
   const { user_id, review_id ,reason} = req.body;
@@ -248,15 +278,19 @@ app.post('/reports', (req, res) => {
     res.sendStatus(201);
   });
 });
-
 // Update report by ID
 app.put('/reports/:id', (req, res) => {
   const { id } = req.params;
-  const { reviewer_id, accepted } = req.body;
+  const { reviewer_id, accepted, reason } = req.body;
+
+  const updateFields = {};
+  if (reviewer_id!==undefined) updateFields.reviewer_id = reviewer_id;
+  if (accepted !== undefined) updateFields.accepted = accepted;
+  if (reason) updateFields.reason = reason;
 
   connection.query(
-    'UPDATE Report SET reviewer_id = ?, accepted = ? WHERE id = ?',
-    [reviewer_id, accepted, id],
+    'UPDATE Report SET ? WHERE id = ?',
+    [updateFields, id],
     (err, result) => {
       if (err) {
         console.error('Error updating report:', err);
@@ -264,6 +298,35 @@ app.put('/reports/:id', (req, res) => {
         return;
       }
       res.status(200).json({ message: 'Report updated successfully' });
+    }
+  );
+});
+
+
+// Update review by ID
+app.put('/reviews/:id', (req, res) => {
+  const { id } = req.params;
+  const { prof_txt, course_txt } = req.body;
+
+  const updateFields = {};
+  if (prof_txt!=undefined) updateFields.prof_txt = prof_txt;
+  if (course_txt != undefined) updateFields.course_txt = course_txt;
+
+
+  if (Object.keys(updateFields).length === 0) {
+    return;
+  }
+
+  connection.query(
+    'UPDATE Review SET ? WHERE review_id = ?',
+    [updateFields, id],
+    (err, result) => {
+      if (err) {
+        console.error('Error updating review:', err);
+        res.status(500).json({ message: 'Error updating ewview' });
+        return;
+      }
+      res.status(200).json({ message: 'Report review successfully' });
     }
   );
 });

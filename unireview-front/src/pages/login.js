@@ -17,18 +17,19 @@ const Login = () => {
         const result = await response.json();
 
         if (result.length === 0) {
-          alert('Invalid nome or password');
+          alert('Nome ou senha inválida');
         } else {
-          const userData = result
-          sessionStorage.setItem('user', JSON.stringify(userData));
+
+          const { foto, ...rest } = result;
+          sessionStorage.setItem('user', JSON.stringify(rest));
 
           //teste
           console.log(sessionStorage.getItem('user'))
-          alert('Login successful!');
+          alert('Login bem sucedido!');
         }
       } else {
         // Handle error response
-        alert('Error logging in');
+        alert('Erro ao fazer login');
       }
     } catch (error) {
       // Handle network or other errors
